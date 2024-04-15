@@ -33,7 +33,7 @@ function getCurrentFunctionName() {
  *
  */
 function getFunctionBody(func) {
-  return func.toString();
+  return func ? func.toString() : '';
 }
 
 /**
@@ -181,14 +181,15 @@ function retry(func, attempts) {
  *
  */
 function logger(func, logFunc) {
-  function loggingWrapper(...args) {
-    const argsString = args.map((arg) => JSON.stringify(arg)).join(', ');
+  return function loggingWrapper(...args) {
+    const argsString = args.map((arg) =>
+      Array.isArray(arg) ? JSON.stringify(arg) : arg
+    );
     logFunc(`${func.name}(${argsString}) starts`);
     const result = func(...args);
     logFunc(`${func.name}(${argsString}) ends`);
     return result;
-  }
-  return loggingWrapper;
+  };
 }
 /**
  * Return the function with partial applied arguments
