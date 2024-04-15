@@ -181,13 +181,14 @@ function retry(func, attempts) {
  *
  */
 function logger(func, logFunc) {
-  return function wrappedFunc(...args) {
-    const funcName = func.name;
-    logFunc(`${funcName} starts`);
+  function loggingWrapper(...args) {
+    const argsString = args.map((arg) => JSON.stringify(arg)).join(', ');
+    logFunc(`${func.name}(${argsString}) starts`);
     const result = func(...args);
-    logFunc(`${funcName} ends`);
+    logFunc(`${func.name}(${argsString}) ends`);
     return result;
-  };
+  }
+  return loggingWrapper;
 }
 /**
  * Return the function with partial applied arguments
